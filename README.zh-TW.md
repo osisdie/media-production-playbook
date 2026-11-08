@@ -8,6 +8,7 @@
 
 - **台灣華語與台語**：本機語音辨識用 Breeze-ASR-25（華語＋中英夾雜）和 Breeze-ASR-26（台語語音 → 華語文字）；台語 TTS 用 GPT-SoVITS 的台語 fork；品管會處理繁簡與數字寫法。見 [docs/playbooks/taiwanese-taigi.md](docs/playbooks/taiwanese-taigi.md)。
 - **抓得到 CER 漏掉問題的旁白品管**：拖音、重複、語速離群、相對自然度。
+- **行銷審查關卡**：技術 QA 全過、產品卻看起來廉價或詭異——用創意總監視角的清單（開頭鉤子、吸引力、文案與畫面一致、品牌色實測）在正式 render 前審試渲。見 [docs/playbooks/marketing-review.md](docs/playbooks/marketing-review.md)。
 - **由旁白驅動的影片**：Remotion，加上選用的 Blender 3D 鏡頭，CPU 就跑得動。
 - **踩在拍上的產品發表片**：本機生成節奏型配樂（ACE-Step＋分軌＋程式鼓組），配樂、剪接、3D 動畫共用同一條節拍格線。見 [docs/playbooks/beat-synced-launch-video.md](docs/playbooks/beat-synced-launch-video.md)。
 
@@ -70,7 +71,7 @@ python3 scripts/vo/verify.py examples/course-demo/project.zh.json   # 旁白品�
 ## 內容
 
 ```
-docs/playbooks/   聲音製作・台語 TTS 與 ASR・旁白品管・課程片・宣傳片・Blender 進管線
+docs/playbooks/   聲音製作・台語 TTS 與 ASR・旁白品管・課程片・宣傳片・行銷審查・Blender 進管線
                   ・有節奏感的 3D 發表片（配樂＋節拍剪輯＋多 agent 協調）
 docs/platform/    Windows WSL・macOS・低資源機器
 docs/consent/     聲音同意紀錄範本（clone 任何人的聲音之前）

@@ -15,7 +15,7 @@ scripts/blender/find_blender.sh                          # 印出找到的 Blend
 "$(scripts/blender/find_blender.sh)" -b -P scripts/blender/render_scene.py -- --help
 ```
 - `-b`：背景模式（不開 UI）；`-P script.py`：執行腳本；`--` 之後的參數交給腳本自己解析。
-- 全部程序產生（幾何、材質、燈光都在腳本裡建），不依賴 `.blend` 或外部素材，沒有授權問題，也方便版控。
+- 全部程序產生（幾何、材質、燈光都在腳本裡建），不依賴 `.blend` 或外部素材，沒有授權問題，也方便版控。但**商品本身不要程序建模**：有自己的商品照片就做成照片卡，程序建模的商品很容易看起來廉價或詭異（見 [marketing-review](marketing-review.md)）。
 
 ## Finding Blender on each OS — 各 OS 的執行檔
 
