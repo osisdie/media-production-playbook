@@ -17,6 +17,7 @@ import argparse
 import hashlib
 import json
 import os
+import re
 import sys
 import time
 from pathlib import Path
@@ -102,15 +103,35 @@ def make_pipeline(voice: str):
     if lang not in LANG_FROM_PREFIX:
         sys.exit(f"Cannot infer Kokoro language from voice '{voice}'")
     if lang == "z":
-        # English words inside Mandarin text (e.g. a product name) are phonemised
-        # by the English G2P instead of being dropped.
+        # misaki's zh G2P ignores en_callable for the v1.0 model (legacy path): Latin letters
+        # reach the model as raw symbols. Lines with Latin words go through mixed_phonemes()
+        # instead; pure-Chinese lines keep the stock pipeline path.
         en = KPipeline(lang_code="a", repo_id="hexgrad/Kokoro-82M", model=False)
 
         def en_callable(word: str) -> str:
             return next(en(word)).phonemes
 
-        return KPipeline(lang_code="z", repo_id="hexgrad/Kokoro-82M", en_callable=en_callable)
+        pipeline = KPipeline(lang_code="z", repo_id="hexgrad/Kokoro-82M", en_callable=en_callable)
+        pipeline.en_g2p = en_callable
+        return pipeline
     return KPipeline(lang_code=lang, repo_id="hexgrad/Kokoro-82M")
+
+
+LATIN = re.compile(r"[A-Za-z][A-Za-z'-]*(?:\s+[A-Za-z][A-Za-z'-]*)*")
+
+
+def mixed_phonemes(zh_g2p, en_g2p, text: str, lexicon: dict | None = None) -> str:
+    """Phonemes for Mandarin text with Latin words: Chinese runs via the zh G2P, each Latin
+    run via `lexicon` (exact phoneme override, e.g. {"Verdalo": "vɜɹdˈɑlO"}) or the English G2P."""
+    lexicon = lexicon or {}
+    parts, pos = [], 0
+    for m in LATIN.finditer(text):
+        parts.append(zh_g2p(text[pos:m.start()]))
+        word = m.group(0)
+        parts.append(lexicon.get(word) or en_g2p(word))
+        pos = m.end()
+    parts.append(zh_g2p(text[pos:]))
+    return " ".join(p.strip() for p in parts if p and p.strip())
 
 
 def main() -> int:
@@ -126,6 +147,7 @@ def main() -> int:
     if tts.get("engine", "kokoro") != "kokoro":
         sys.exit(f"This script only handles engine 'kokoro' (got {tts.get('engine')!r})")
     voice, speed = tts["voice"], float(tts.get("speed", 1.0))
+    lexicon = tts.get("lexicon") or {}  # optional {"LatinWord": "phonemes"} for zh voices
 
     out_dir = project_path.parent / "build" / proj["lang"]
     vo_dir = out_dir / "vo"
@@ -141,15 +163,22 @@ def main() -> int:
     for i, line in enumerate(proj["lines"], 1):
         lid, text = line["id"], line["text"]
         wav = vo_dir / f"{lid}.wav"
-        h = line_hash({"voice": voice, "speed": speed}, text)
+        mixed = voice[0] == "z" and bool(LATIN.search(text))
+        cfg = {"voice": voice, "speed": speed}
+        if mixed:  # new G2P path for these lines only; pure-Chinese hashes stay unchanged
+            cfg.update(g2p="mixed-v1", lexicon={k: v for k, v in lexicon.items() if k in text})
+        h = line_hash(cfg, text)
         reuse = wav.exists() and manifest.get(lid) == h and not args.force and (not only or lid not in only)
         if not reuse:
             if pipeline is None:
                 log(f"loading Kokoro (voice {voice}, {os.cpu_count()} CPU threads)")
                 pipeline = make_pipeline(voice)
-            chunks = [np.asarray(r.audio, dtype=np.float32)
-                      for r in pipeline(text, voice=voice, speed=speed, split_pattern=r"\n+")
-                      if r.audio is not None]
+            if mixed:
+                ps = mixed_phonemes(lambda t: pipeline.g2p(t)[0], pipeline.en_g2p, text, lexicon)
+                results = pipeline.generate_from_tokens(ps, voice=voice, speed=speed)
+            else:
+                results = pipeline(text, voice=voice, speed=speed, split_pattern=r"\n+")
+            chunks = [np.asarray(r.audio, dtype=np.float32) for r in results if r.audio is not None]
             if not chunks:
                 sys.exit(f"line {lid}: Kokoro returned no audio")
             audio = trim_silence(np.concatenate(chunks))
