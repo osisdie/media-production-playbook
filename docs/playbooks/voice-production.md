@@ -15,7 +15,7 @@
 |---|---|---|
 | 範例旁白（不 clone） | **Kokoro-82M**（Apache-2.0） | 非自回歸，結果穩定可重現；有英文與中文的男女聲；CPU 很快。本 repo 範例都用它 |
 | 華語聲音 clone | **GPT-SoVITS v2ProPlus** | CPU 上 RTF 約 2.5；參考音 3–10 秒；自回歸，偶爾拖音／重複 → 一定要跑 [narration QA](narration-qa.md) |
-| 台灣華語合成、clone 對照 | BreezyVoice（Apache-2.0） | 自然度好但 CPU RTF 16–22，只適合預先合成 |
+| 台灣華語合成、clone 對照 | BreezyVoice（Apache-2.0） | 台灣腔與用字通常最準；CPU RTF 約 12–22（依硬體與句長），只適合預先合成 |
 | 台語 TTS（研究預覽） | GPT-SoVITS-tw 系列 fork | 只吃 POJ／Tâi-lô；一定要 ref-free；長句會飄 → 詳見 [Taiwanese (Taigi)](taiwanese-taigi.md) |
 | 台語 ASR | Breeze-ASR-26（Whisper 微調，CT2 int8） | 台語語音 → 華語漢字；一律 `language="zh"` → 詳見 [Taiwanese (Taigi)](taiwanese-taigi.md) |
 | 華語＋中英夾雜 ASR | Breeze-ASR-25（Whisper 微調，CT2 int8） | 直接輸出繁體；beam 1 比 beam 5 快 1.8 倍、準確度幾乎不變 |
