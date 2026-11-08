@@ -14,7 +14,7 @@
 
 - 每顆鏡頭從**該句旁白所在的小節線**開始；如果前一句還沒講完，就退到它講完之後最早的一拍（不切斷旁白）。
 - drop 那一句：音樂**晚一拍**才 duck，讓 drop 先全音量打出來，旁白再壓上去。
-- 沒有旁白時音樂增益約 0.6；有旁白時約 0.14–0.2，也就是**相對**壓低約 10–12 dB（[promo-video](promo-video.md) 的 0.14 是偏保守的一端；音樂本身很密集時取低值）。attack 0.15 秒、release 0.3 秒。
+- 沒有旁白時音樂增益約 0.6；有旁白時約 0.14–0.2，也就是**相對**壓低約 10–12 dB（[promo-video](promo-video.md) 的 0.14 是壓得最深的一端；音樂本身很密集時取低值）。attack 0.15 秒、release 0.3 秒。
 - 3D 鏡頭內的小推進（camera punch）放在每小節第一拍：快升、慢退，像 kick 的包絡。
 
 ## 3D shots — Blender 鏡頭
@@ -23,7 +23,7 @@
 - **人物用風格化人偶（木頭人偶、低多邊形）或剪影**：程序產生寫實人物很難好看（恐怖谷），也避開肖像權。
 - **字標照官方檔案**：取樣官方圖檔的顏色，不要照 brief 的文字描述（顏色、字重、字距、哪個部件用哪個顏色，都很容易被記錯）。
 - **亮場不要「白配白」**：小角度 key light 做出接觸陰影、窄角 spot 做輪廓光（大面積 area light 會把整個無縫背景染色）、背景自然漸暗、淺景深；品牌色只當重點光。
-- **審查流程**：半解析試渲（每顆 2–3 幀）→ 拼成一張 contact sheet 給人看（`scripts/video/contact_sheet.py`） → 每 10 幀一張的草稿 → 正式版。每一輪都看 contact sheet 再往下。
+- **審查流程**：半解析試渲（每顆 2–3 幀）→ 拼成一張 contact sheet 給人看（`scripts/video/contact_sheet.py` 吃影片：PNG 試渲先用 `scripts/blender/frames_to_mp4.sh` 串成影片再抽幀） → 每 10 幀一張的草稿 → 正式版。每一輪都看 contact sheet 再往下。
 
 ### Animation in code, rendered frame by frame
 - 動畫用 Python 逐幀計算（`apply(frame)` 設定位置、材質、可見性），再逐幀 render still，不用關鍵影格：緩動公式精確、拍點同步容易，在自己的渲染腳本加上 `--step`（每 N 幀一張）和 `--only`（指定幀）參數，草稿和抽幀就不用另外寫程式（本 repo 的 `render_scene.py` 尚未實作這兩個參數）。
