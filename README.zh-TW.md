@@ -4,6 +4,12 @@
 
 一套可重複使用、CPU 就跑得動的 AI 影音製作經驗庫：本機 TTS 旁白、旁白自動品管、由旁白驅動時間軸的 [Remotion](https://www.remotion.dev/) 影片，以及選用的 [Blender](https://www.blender.org/) 3D 鏡頭。在一台普通的 Windows＋WSL2 筆電（8 核、沒有 NVIDIA 顯示卡）上實作與測試，也考慮了 macOS。
 
+重點功能：
+
+- **台灣華語與台語**：本機語音辨識用 Breeze-ASR-25（華語＋中英夾雜）和 Breeze-ASR-26（台語語音 → 華語文字）；台語 TTS 用 GPT-SoVITS 的台語 fork；品管會處理繁簡與數字寫法。見 [docs/playbooks/taiwanese-taigi.md](docs/playbooks/taiwanese-taigi.md)。
+- **抓得到 CER 漏掉問題的旁白品管**：拖音、重複、語速離群、相對自然度。
+- **由旁白驅動的影片**：Remotion，加上選用的 Blender 3D 鏡頭，CPU 就跑得動。
+
 它同時是三樣東西：
 
 - **經驗文件**（`docs/`）：哪些做法有效、哪裡會壞，以及抓得到問題的檢查。
@@ -63,7 +69,7 @@ python3 scripts/vo/verify.py examples/course-demo/project.zh.json   # 旁白品�
 ## 內容
 
 ```
-docs/playbooks/   聲音製作・旁白品管・課程片・宣傳片・Blender 進管線
+docs/playbooks/   聲音製作・台語 TTS 與 ASR・旁白品管・課程片・宣傳片・Blender 進管線
 docs/platform/    Windows WSL・macOS・低資源機器
 docs/consent/     聲音同意紀錄範本（clone 任何人的聲音之前）
 skills/           同樣的知識，做成 Claude Code skill（複製到 ~/.claude/skills）

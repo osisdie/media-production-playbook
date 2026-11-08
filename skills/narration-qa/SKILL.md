@@ -1,11 +1,11 @@
 ---
 name: narration-qa
-description: Use when producing or checking TTS / voice-clone narration (courses, promos, product demos) — picking takes, catching drags/repeats/rate outliers that CER misses, prosody post-processing, and producing a "listen to these lines" list. Works CPU-only on WSL/Linux/macOS.
+description: Use when producing or checking TTS / voice-clone narration (courses, promos, product demos; Mandarin, English, Taiwanese Hokkien/Taigi) — picking takes, catching drags/repeats/rate outliers that CER misses, prosody post-processing, and producing a "listen to these lines" list. Works CPU-only on WSL/Linux/macOS.
 ---
 
 # Narration QA
 
-Full playbook: `docs/playbooks/narration-qa.md` (and `docs/playbooks/voice-production.md` for engines).
+Full playbook: `docs/playbooks/narration-qa.md` (engines: `docs/playbooks/voice-production.md`; Taiwanese Hokkien / Taigi TTS & ASR: `docs/playbooks/taiwanese-taigi.md`).
 
 1. Synthesise per line into `examples/<example>/build/<lang>/vo/<id>.wav` (non-deterministic engines: several takes into `build/<lang>/takes/<id>-<tag>.wav`, then `python3 scripts/vo/pick_takes.py <project.json>`).
 2. Run `python3 scripts/vo/verify.py <project.json>` **on the final processed files** → `QA.md`.
