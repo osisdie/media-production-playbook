@@ -10,8 +10,8 @@ Playbooks: `docs/playbooks/course-video.md`, `docs/playbooks/promo-video.md`, `d
 1. Write a TTS-friendly script (`prompts/tts-script-writing.md`) as `project.<lang>.json`.
 2. Synthesise and QA the narration first (skill: narration-qa). Shot lengths come from the narration.
 3. Build shots from reusable components in `remotion/src/kit/`; captions as fixed line arrays, content above the caption band.
-4. Render one composition at a time (`concurrency: 1`), then `scripts/video/post.sh`.
-5. Marketing gate (`docs/playbooks/marketing-review.md`): a creative-director review of the test contact sheet and 4 key 1080p stills before the final render; never model products procedurally when product photos exist.
-6. Check: ffprobe spec, ebur128 loudness, a per-second contact sheet of stills (captions, clipped text, single-character lines, masked secrets), and the narration QA list.
+4. Marketing gate (`docs/playbooks/marketing-review.md`): a creative-director review of the test contact sheet and 4 key 1080p stills before the final render; never model products procedurally when product photos exist.
+5. Final render one composition at a time (`concurrency: 1`), then `scripts/video/post.sh`.
+6. Check: ffprobe spec, ebur128 loudness, a per-second contact sheet (`contact_sheet.py --tiles <seconds>`) (captions, clipped text, single-character lines, masked secrets), and the narration QA list.
 
 Rules: no real brands/people/prices in mock screens; API keys always masked; one heavy job at a time; re-render only what changed but re-check stills of every video that shares a changed component.
