@@ -4,6 +4,12 @@
 
 A reusable, CPU-friendly playbook for AI-assisted media production — narration with local TTS, automatic narration QA, narration-driven video with [Remotion](https://www.remotion.dev/), and optional 3D shots with [Blender](https://www.blender.org/). Built and tested on a modest Windows + WSL2 laptop (8 cores, no NVIDIA GPU), written to work on macOS too.
 
+Highlights:
+
+- **Taiwanese Mandarin and Taiwanese Hokkien (Taigi, 台語)** — local ASR with Breeze-ASR-25 (Mandarin + code-switching) and Breeze-ASR-26 (Taigi speech → Mandarin text), Taigi TTS with a GPT-SoVITS fork, Traditional-Chinese-aware QA. See [docs/playbooks/taiwanese-taigi.md](docs/playbooks/taiwanese-taigi.md).
+- **Narration QA that catches what CER misses** — drags, repeats, rate outliers, relative naturalness.
+- **Narration-driven video** with Remotion, plus optional Blender 3D shots — all CPU-friendly.
+
 It is three things at once:
 
 - **Playbooks** (`docs/`) — what worked, what broke, and the checks that catch it.
@@ -65,7 +71,7 @@ python3 scripts/vo/verify.py examples/course-demo/project.zh.json   # narration 
 ## What's inside
 
 ```
-docs/playbooks/   voice-production · narration-qa · course-video · promo-video · blender-in-pipeline
+docs/playbooks/   voice-production · taiwanese-taigi · narration-qa · course-video · promo-video · blender-in-pipeline
 docs/platform/    windows-wsl · macos · low-resource
 docs/consent/     voice consent record template (before cloning anyone's voice)
 skills/           the same knowledge as Claude Code skills (copy into ~/.claude/skills)
