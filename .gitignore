@@ -1,0 +1,42 @@
+# Local-only safety list (contains the private terms it guards against) — never commit
+.private-denylist
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Python / Node
+.venv/
+__pycache__/
+*.pyc
+node_modules/
+.remotion/
+
+# Models and caches (see models/README.md)
+models/*
+!models/README.md
+
+# Generated media — renders go to GitHub Releases, not git
+build/
+out/
+**/build/
+**/out/
+*.mp4
+*.mov
+*.webm
+*.wav
+*.mp3
+*.flac
+*.blend1
+remotion/public/generated/
+
+# Personal voice material must never enter this repo
+voices/
+ref-audio/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

@@ -1,0 +1,16 @@
+# Python dependencies for TTS (Kokoro) and narration QA (faster-whisper).
+# Python 3.10-3.12 (Kokoro does not support 3.13+ yet).
+# On Linux/WSL the setup script adds the CPU-only PyTorch index so pip does not
+# pull multi-GB CUDA wheels.
+kokoro==0.9.4
+misaki[zh,en]>=0.9.4
+soundfile>=0.12
+numpy>=1.26,<3
+pyloudnorm>=0.1.1
+faster-whisper>=1.1
+# PyAV 19 removed av.open(metadata_errors=...), which faster-whisper 1.2.1 still passes.
+av>=11,<19
+# used by scripts/vo (narration QA): pause detection and pitch/rate checks
+librosa>=0.10
+# Simplified -> Traditional folding for zh ASR comparison in scripts/vo (pure Python)
+opencc-python-reimplemented>=0.1.7

@@ -1,0 +1,14 @@
+{
+  "id": "my-video-en",
+  "example": "my-video",
+  "lang": "en",
+  "tts": {"engine": "kokoro", "voice": "af_heart", "speed": 1.0},
+  "video": {"composition": "MyVideoEn", "width": 1920, "height": 1080, "fps": 30},
+  "design": {},
+  "lines": [
+    {"id": "01", "text": "One short sentence, written the way it should be spoken.",
+     "caption": ["One short sentence,", "the way it should be read."],
+     "scene": "title card",
+     "visual": {"kind": "title", "title": "My Video", "subtitle": "subtitle"}}
+  ]
+}
