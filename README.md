@@ -9,6 +9,7 @@ Highlights:
 - **Taiwanese Mandarin and Taiwanese Hokkien (Taigi, 台語)** — local ASR with Breeze-ASR-25 (Mandarin + code-switching) and Breeze-ASR-26 (Taigi speech → Mandarin text), Taigi TTS with a GPT-SoVITS fork, Traditional-Chinese-aware QA. See [docs/playbooks/taiwanese-taigi.md](docs/playbooks/taiwanese-taigi.md).
 - **Narration QA that catches what CER misses** — drags, repeats, rate outliers, relative naturalness.
 - **Narration-driven video** with Remotion, plus optional Blender 3D shots — all CPU-friendly.
+- **Beat-synced launch videos**: locally generated rhythmic music (ACE-Step + stems + procedural drums), one beat grid shared by music, edit and 3D animation. See [docs/playbooks/beat-synced-launch-video.md](docs/playbooks/beat-synced-launch-video.md).
 
 It is three things at once:
 
@@ -72,6 +73,7 @@ python3 scripts/vo/verify.py examples/course-demo/project.zh.json   # narration 
 
 ```
 docs/playbooks/   voice-production · taiwanese-taigi · narration-qa · course-video · promo-video · blender-in-pipeline
+                  · beat-synced-launch-video (3D + music + beat-grid editing, multi-agent orchestration)
 docs/platform/    windows-wsl · macos · low-resource
 docs/consent/     voice consent record template (before cloning anyone's voice)
 skills/           the same knowledge as Claude Code skills (copy into ~/.claude/skills)
