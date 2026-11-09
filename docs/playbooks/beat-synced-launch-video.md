@@ -66,7 +66,7 @@
    - **mp3 編碼會讓 true peak 再升 0.5–1.2 dB**：混音用 WAV；mp3 解碼後再量 TP，必要時降一點重編。
 
 ### ACE-Step on CPU
-- 要**有人聲的中文歌**（歌詞 MV）：v1 與 1.5 的 GPU／CPU 實測、ComfyUI 版 v1 要餵拼音、1.5 關鍵詞咬字漂移與削波，見 [local-ai-music-video](local-ai-music-video.md#作曲)。
+- 要**有人聲的中文歌**（歌詞 MV）：v1 與 1.5 的 GPU／CPU 實測、ComfyUI 版 v1 要餵拼音、1.5 關鍵詞咬字漂移與削波，實測見 [local-ai-music-video](local-ai-music-video.md#作曲中文人聲)，陷阱見[同一份的作曲段](local-ai-music-video.md#作曲)。
 - **bf16 先確認 CPU 支援**（AVX512-BF16／AMX）。不支援時 bf16 是軟體模擬，比 fp32 慢很多（實測 > 600 秒／seed vs fp32 約 310 秒／seed，峰值 RAM 約 15 GB）。記憶體夠就用 fp32；記憶體不夠（約 16 GB 以下）才需要 bf16。
 - `uv pip install -e` 會照 pyproject 的 CUDA 釘選抓 CUDA 版 torch：CPU 機器用 `--override` 換成 `+cpu` wheel。
 

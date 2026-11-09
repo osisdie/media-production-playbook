@@ -1,6 +1,6 @@
 # Local AI lyric music video — 只用本機開源模型做擬真歌詞 MV（6 GB 筆電 GPU）
 
-> 雲端流程通常是「Midjourney 生圖 → Runway／Kling 圖生影片 → Suno 作曲含人聲 → AE／剪映動態歌詞」。這份是把每一步換成**本機開源模型**的實測：一台 6 GB VRAM 的筆電 GPU（Blackwell）、WSL2 4 vCPU、31 GB RAM，ComfyUI headless 驅動。範例歌詞是一首虛構 AI 會議助理產品的中文歌（主題：會後摘要、待辦追蹤）。下面是流程、量到的數字、授權注意事項，以及踩過的坑。配樂與節拍格線見 [beat-synced-launch-video](beat-synced-launch-video.md)，人聲品管見 [narration-qa](narration-qa.md)，成片審查見 [marketing-review](marketing-review.md)。
+> 雲端流程通常是「Midjourney 生圖 → Runway／Kling 圖生影片 → Suno 作曲含人聲 → AE／剪映動態歌詞」。這份是把每一步換成**本機開源模型**的實測：一台 6 GB VRAM 的筆電 GPU（Blackwell）、WSL2 4 vCPU、31 GB RAM，ComfyUI headless 驅動。實測用的是一首 8 行、介紹虛構產品功能的中文歌。下面是流程、量到的數字、授權注意事項，以及踩過的坑。配樂與節拍格線見 [beat-synced-launch-video](beat-synced-launch-video.md)，人聲品管見 [narration-qa](narration-qa.md)，成片審查見 [marketing-review](marketing-review.md)。
 
 ## TL;DR
 
@@ -26,7 +26,7 @@
 ```
 
 - **AI 畫面裡的中文字一定是亂碼**：螢幕、白板、招牌上的產品介面一律在 Remotion 疊上去（見 [promo-video](promo-video.md) 的 Mock UI），提示詞裡要求「blank screen / unbranded」。
-- **歌詞先做事實核對**：每一句對到產品真的有的功能，刻意避開不能承諾的說法（例如「自動指派」「到期前提醒」若產品沒有，就不要寫），不寫價格、不提第三方平台。
+- **歌詞先做事實核對**：每一句對到產品真的有的功能，刻意避開不能承諾的說法（產品還沒有、或只在規劃中的功能就不要寫），不寫價格、不提第三方平台。
 - **動態歌詞**：用 Remotion 逐字或逐詞出現，時間點取自 `beats.json`（每句從小節線開始）和人聲分軌的 ASR 字級時間。這一步沿用既有的 beat grid 做法，沒有額外的模型需求。
 
 ## Measured — 實測數字
@@ -40,7 +40,7 @@
 | RealVisXL V5.0 fp16（SDXL），30 steps dpmpp_2m_sde | 關鍵畫面 | 1344×768 | **46–51 秒／張** | 5.4 GB | 8.5 GB | ★★★★½ 很像攝影、膚質自然；加負面提示後筆電 logo 從 4/4 降到 0/2 | CreativeML **OpenRAIL++-M**：可商用，有使用限制條款 |
 | FLUX.1-schnell GGUF Q4_K_S＋t5xxl fp8，4 steps | 關鍵畫面 | 1344×768 | **35–37 秒**（冷啟動 66 秒） | 4.8 GB | 7.6–10.5 GB | ★★★½ 構圖乾淨，但皮膚塑膠感、像圖庫照片；**沒有負面提示，logo 3/4 張** | **Apache-2.0** |
 | RealVisXL 遮罩 img2img（去 logo） | 局部重繪 | 1344×768（遮罩約 70 px） | 78.5 秒（整張 latent，denoise 0.75） | 5.4 GB | 8.3 GB | ★★★★★ logo 消失、看不出接縫；只裁遮罩附近重繪可降到約 15 秒 | 同 RealVisXL |
-| RealVisXL 純提示詞 | 角色基準 | 1344×768 | 59–88 秒 | 5.4 GB | 8–11 GB | 每個 seed 都是**不同的人** | — |
+| RealVisXL 純提示詞 | 角色基準 | 1344×768 | 59–88 秒（同設定卻比第一列慢：量測時機器共用，原因沒有單獨確認） | 5.4 GB | 8–11 GB | 每個 seed 都是**不同的人** | — |
 | RealVisXL＋IP-Adapter **FaceID PlusV2**（＋LoRA 0.6，weight 0.85） | 同一角色換場景 | 1344×768 | 76 秒（首次 215 秒，含 InsightFace 載入） | 5.3 GB | 13.0 GB | ★★½ 臉型、髮型相近，但像「親戚」不像同一人 | ❌ **僅限非商業研究**（InsightFace 權重） |
 | RealVisXL＋IP-Adapter **plus-face** SDXL（ViT-H，weight 0.8） | 同一角色換場景 | 1344×768 | **52–63 秒** | 5.4 GB | 12.7 GB | ★★★★ 明顯是同一張臉；服裝、飾品也會一起帶過去（連戲方便，但不能每場換裝） | ✅ **Apache-2.0**；CLIP-ViT-H 為 MIT |
 | LTX-Video 2B 0.9.8 distilled，8 steps | 圖生影片 5 秒（121 幀 @24fps） | 768×448 | 33.6 秒／顆 | 5.3 GB | 12.8 GB | ★★ 動作流暢、手還可以，但**臉 1 秒內就變成別人** | **LTXV Open Weights License**：年營收 **< 1,000 萬美元**的組織才免費，以上要買商用授權 |
@@ -112,10 +112,10 @@ ACE-Step 透過 ComfyUI 原生節點跑。CER 用 Breeze-ASR-25（CT2 int8、CPU
 
 ### 作曲
 - **ComfyUI 的 ACE-Step v1 會把每個漢字變成 UNK**：v1 的歌詞 tokenizer 原本靠 pypinyin 先轉拼音，ComfyUI 的移植拿掉了這一步。直接餵漢字，模型會亂唱（CER≈1，有的 seed 唱成英文）。
-  - 修法：歌詞先用 pypinyin 轉 **tone3 拼音**（例如「會後摘要」→ `hui4 hou4 zhai1 yao4`），破音字手動修（例如結構助詞「得」改 `de5`）。
+  - 修法：歌詞先用 pypinyin 轉 **tone3 拼音**（例如「看懂光線」→ `kan4 dong3 guang1 xian4`），破音字手動修（例如結構助詞「得」改 `de5`）。
   - 每一行加 `[zh]` 前綴，否則會被當英文；英文詞放在獨立的 `[en]` 行。
   - ACE-Step 1.5 用 Qwen tokenizer，可以直接吃漢字。
-- **ACE-Step 1.5 的副歌關鍵詞會漂**：同一個品牌短語在 7 個 take 裡有 4 個被唱成捲舌音 sh→s 加變調，其他雙音節詞也常被唱成同音不同調的詞。關鍵詞要用 SYL 指標逐 take 檢查，必要時改用 v1（拼音）或換一個比較好唱的詞。
+- **ACE-Step 1.5 的副歌關鍵詞會漂**：同一個品牌短語在 7 個 take 裡有 4 個子音或聲調被唱偏，其他雙音節詞也常被唱成同音不同調的詞。關鍵詞要用 SYL 指標逐 take 檢查，必要時改用 v1（拼音）或換一個比較好唱的詞。
 - **英文品牌名**：v1 只有放在獨立 `[en]` 行時才會唱，ASR 聽起來像被拆成兩個字；1.5 會跳過或在那裡打轉。退路：歌只唱中文短語，品牌英文名用畫面字卡呈現。
 - **ACE-Step 1.5 會削波**：成品 true peak 0 到 +0.7 dBTP、整體 −10 到 −12 LUFS。使用前一律過 true-peak limiter 到 −1 dBTP 以下，再 loudnorm（網路 −14 LUFS，或配合 MV 混音），做法見 [beat-synced-launch-video](beat-synced-launch-video.md#music--本機生成節奏型配樂)。
 - **唱歌的 ASR 很吵**：會陷入重複迴圈（「A-A-A…」）、分不出同音字；CER 異常高的 take 標記成「人耳確認」，不要直接丟掉。Demucs 2-stem 分出人聲再跑 ASR 會準一點，也可以順便確認伴奏沒有人聲殘留。
