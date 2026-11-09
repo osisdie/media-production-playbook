@@ -28,7 +28,7 @@ python3 scripts/setup/check_env.py                             # what's installe
   ```
   The subshell keeps your current directory. Then compare both sides:
   - Windows: `Get-ChildItem -LiteralPath 'G:\My Drive\some\folder\delivery-folder' -Recurse -File | Measure-Object -Property Length -Sum` (Count and Sum)
-  - WSL: `find ~/path/to/delivery-folder -type f | wc -l; du -sb --apparent-size ~/path/to/delivery-folder`
+  - WSL: `find ~/path/to/delivery-folder -type f -printf '%s\n' | awk '{n++; s+=$1} END {print n, s}'` (file count and bytes — `du` would also count directory entries)
 
   (With PowerShell `Copy-Item -Recurse`, the result depends on whether the destination already exists — a second run nests one level deeper. Paths containing a single quote also break PowerShell single-quoted strings.) Mounting the drive with `sudo mkdir -p /mnt/g && sudo mount -t drvfs G: /mnt/g` works too, but needs sudo and is gone after a WSL restart unless added to `/etc/fstab`.
 - No NVIDIA GPU? Everything here works CPU-only; see [low-resource](low-resource.md).
