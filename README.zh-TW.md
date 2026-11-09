@@ -11,6 +11,7 @@
 - **行銷審查關卡**：技術 QA 全過、產品卻看起來廉價或詭異——用創意總監視角的清單（開頭鉤子、吸引力、文案與畫面一致、品牌色實測）在正式 render 前審試渲。見 [docs/playbooks/marketing-review.md](docs/playbooks/marketing-review.md)。
 - **由旁白驅動的影片**：Remotion，加上選用的 Blender 3D 鏡頭，CPU 就跑得動。
 - **踩在拍上的產品發表片**：本機生成節奏型配樂（ACE-Step＋分軌＋程式鼓組），配樂、剪接、3D 動畫共用同一條節拍格線。見 [docs/playbooks/beat-synced-launch-video.md](docs/playbooks/beat-synced-launch-video.md)。
+- **只用本機開源模型做擬真 AI 歌詞 MV**：在 6 GB 筆電 GPU 上實測 SDXL／FLUX 關鍵畫面、IP-Adapter 角色一致、FramePack 與 LTX 圖生影片、ACE-Step 中文人聲作曲，附授權注意事項和一晚的產能估算。見 [docs/playbooks/local-ai-music-video.md](docs/playbooks/local-ai-music-video.md)。
 
 它同時是三樣東西：
 
@@ -73,6 +74,7 @@ python3 scripts/vo/verify.py examples/course-demo/project.zh.json   # 旁白品�
 ```
 docs/playbooks/   聲音製作・台語 TTS 與 ASR・旁白品管・課程片・宣傳片・行銷審查・Blender 進管線
                   ・有節奏感的 3D 發表片（配樂＋節拍剪輯＋多 agent 協調）
+                  ・本機 AI 歌詞 MV（關鍵畫面 → 圖生影片 → 含人聲作曲 → 動態歌詞，6 GB GPU）
 docs/platform/    Windows WSL・macOS・低資源機器
 docs/consent/     聲音同意紀錄範本（clone 任何人的聲音之前）
 skills/           同樣的知識，做成 Claude Code skill（複製到 ~/.claude/skills）
