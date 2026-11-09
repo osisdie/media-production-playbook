@@ -21,4 +21,10 @@ python3 scripts/setup/check_env.py                             # what's installe
 - Open outputs from Windows: `explorer.exe "$(wslpath -w examples/course-demo/out)"`.
 - Call a Windows program from WSL with a Windows-style path: `"/mnt/c/.../blender.exe" -b -P "$(wslpath -w script.py)"`. Run it from a `/mnt/c` working directory to avoid UNC-path warnings.
 - Microsoft Store apps (e.g. Blender from the Store) live under `C:\Program Files\WindowsApps` and their `.exe` cannot be executed directly from WSL. Blender's Store alias `blender-launcher.exe` does work headless, but it detaches from the console — `scripts/blender/run_blender.sh` waits for a `.done`/`.failed` marker file instead of the exit code. The official portable zip is the alternative (see [blender-in-pipeline](../playbooks/blender-in-pipeline.md)).
+- **Google Drive for desktop (a virtual drive such as `G:`) is not mounted in WSL** — `/mnt/g` doesn't exist and `wslpath -u 'G:\...'` can't help. Copy from Windows instead, using the WSL path as the source:
+  ```bash
+  SRC=$(wslpath -w ~/path/to/delivery-folder)
+  cd /mnt/c && powershell.exe -NoProfile -Command "Copy-Item -LiteralPath '$SRC' -Destination 'G:\My Drive\some\folder' -Recurse"
+  ```
+  Afterwards compare file count and total bytes on both sides (`Get-ChildItem -Recurse -File | Measure-Object -Property Length -Sum`). Mounting it with `sudo mount -t drvfs G: /mnt/g` also works but needs sudo.
 - No NVIDIA GPU? Everything here works CPU-only; see [low-resource](low-resource.md).
