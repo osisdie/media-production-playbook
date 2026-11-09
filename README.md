@@ -11,6 +11,7 @@ Highlights:
 - **A marketing review gate** — technical QA can pass while the product looks cheap or uncanny; a creative-director checklist (hook, desirability, copy-vs-picture consistency, measured brand colour) reviews test renders before the final render. See [docs/playbooks/marketing-review.md](docs/playbooks/marketing-review.md).
 - **Narration-driven video** with Remotion, plus optional Blender 3D shots — all CPU-friendly.
 - **Beat-synced launch videos** — locally generated rhythmic music (ACE-Step + stems + procedural drums), one beat grid shared by music, edit and 3D animation. See [docs/playbooks/beat-synced-launch-video.md](docs/playbooks/beat-synced-launch-video.md).
+- **Realistic AI lyric music video with local open models only** — measured on a 6 GB laptop GPU: SDXL/FLUX keyframes, IP-Adapter character consistency, FramePack vs LTX image-to-video, ACE-Step songs with Mandarin vocals, licence flags and an overnight budget. See [docs/playbooks/local-ai-music-video.md](docs/playbooks/local-ai-music-video.md).
 
 It is three things at once:
 
@@ -75,6 +76,7 @@ python3 scripts/vo/verify.py examples/course-demo/project.zh.json   # narration 
 ```
 docs/playbooks/   voice-production · taiwanese-taigi · narration-qa · course-video · promo-video · marketing-review · blender-in-pipeline
                   · beat-synced-launch-video (3D + music + beat-grid editing, multi-agent orchestration)
+                  · local-ai-music-video (keyframes → image-to-video → song with vocals → kinetic lyrics, 6 GB GPU)
 docs/platform/    windows-wsl · macos · low-resource
 docs/consent/     voice consent record template (before cloning anyone's voice)
 skills/           the same knowledge as Claude Code skills (copy into ~/.claude/skills)
